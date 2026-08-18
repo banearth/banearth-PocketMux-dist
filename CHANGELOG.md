@@ -1,6 +1,8 @@
 # 更新日志
 
 ## 0.1.96
+- **Agent 启动不再擅自修改本机环境或 CLI 配置**：Claude 只执行 `claude [--resume ID] --dangerously-skip-permissions`，Codex 只执行 `codex [resume ID] --yolo`；不再清空 `CLAUDE_*` / `AI_AGENT`，不再设置 `DISABLE_AUTOUPDATER`，也不再改写 Codex 的启动更新配置或自动处理 trust/update 提示。
+- **重复恢复正在运行的 Codex 会话会在创建窗口前被拦截**：Bridge 检查 Codex 的 writer lock，直接提示该会话已在其他窗口运行，避免产生 `already has an active writer (-32600)` 的空壳 Terminal 和长堆栈。
 - **修复手机端反复闪现 `authing`**：WebView 和后台通知服务都严格保持一条当前连接、一个重连任务；旧连接迟到的关闭回调不会再累积出多条中继连接并反复覆盖界面状态。
 - **Chat 不再把“文字仍留在 Terminal 输入框”误报为已送达**：Bridge 会等待输入框稳定清空约 1.8 秒后才返回成功；若文字重现会自动补发 Enter，并把每次检测结果写入诊断日志。
 - **手机远程使用不再依赖 VPN、局域网或端口映射**：PC 与 Android APK 都主动连接阿里云无状态中继，默认地址为 `http://47.103.217.57/pocketmux`，也可在设置中修改。业务帧使用 AES-256-GCM 端到端加密；中继只维护在线连接并转发密文，不保存令牌、对话、文件或终端内容。
